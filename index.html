@@ -150,6 +150,60 @@ body{font-family:'Noto Sans SC',sans-serif;background:linear-gradient(180deg,#f7
 .vault-date{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
 .vault-main{font-size:11px;line-height:1.7;color:var(--ink)}
 
+/* VISUAL PLAY */
+.visual-section{border-bottom:1px solid var(--border);background:#fcfaf7}
+.visual-grid{display:grid;grid-template-columns:1fr 1fr}
+.draw-zone,.avatar-zone{padding:24px 32px}
+.draw-zone{border-right:1px solid var(--border)}
+.visual-title{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:16px}
+.draw-board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.draw-card{height:120px;perspective:1000px;cursor:pointer}
+.draw-card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s ease}
+.draw-card.flipped .draw-card-inner{transform:rotateY(180deg)}
+.draw-face{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;padding:12px}
+.draw-front{background:linear-gradient(135deg,#f5eee7,#fff)}
+.draw-front-mark{font-family:'Cormorant Garamond',serif;font-size:34px;letter-spacing:4px;color:var(--gold)}
+.draw-back{transform:rotateY(180deg);flex-direction:column;gap:8px;color:#fff;text-align:center}
+.draw-icon{font-size:24px}
+.draw-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px}
+.draw-note{font-size:11px;line-height:1.5;opacity:.9}
+.motif-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.motif-card{height:96px;border:1px solid var(--border);position:relative;overflow:hidden;background:#f2ece5}
+.motif-card::after{content:attr(data-label);position:absolute;left:10px;bottom:10px;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(17,17,17,.62)}
+.avatar-zone{background:linear-gradient(180deg,#fff,#f7f2eb)}
+.avatar-layout{display:grid;grid-template-columns:220px 1fr;gap:18px;align-items:start}
+.avatar-stage{height:360px;border:1px solid var(--border);background:radial-gradient(circle at top,#fff 0%,#f5ede4 65%,#efe5d8 100%);position:relative;overflow:hidden}
+.avatar-stage::before{content:"";position:absolute;inset:12px;border:1px dashed rgba(17,17,17,.08)}
+.avatar-shadow{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);width:120px;height:18px;border-radius:50%;background:rgba(17,17,17,.08);filter:blur(8px)}
+.avatar-figure{position:absolute;left:50%;bottom:42px;transform:translateX(-50%);width:140px;height:278px}
+.avatar-head{position:absolute;left:50%;top:12px;transform:translateX(-50%);width:62px;height:72px;border-radius:48% 48% 44% 44%;background:var(--skin);z-index:4}
+.avatar-hair{position:absolute;left:50%;top:0;transform:translateX(-50%);width:84px;height:98px;background:var(--hair);z-index:5}
+.avatar-hair.soft{border-radius:44px 44px 38px 38px / 52px 52px 32px 32px}
+.avatar-hair.short{border-radius:44px 44px 26px 26px / 36px 36px 24px 24px;height:74px}
+.avatar-hair.wavy{border-radius:40px 40px 36px 36px / 60px 60px 40px 40px;height:112px}
+.avatar-neck{position:absolute;left:50%;top:75px;transform:translateX(-50%);width:18px;height:18px;background:var(--skin);z-index:3}
+.avatar-torso{position:absolute;left:50%;top:86px;transform:translateX(-50%);width:88px;height:96px;background:var(--look-main);border-radius:20px 20px 28px 28px;z-index:2}
+.avatar-sleeve{position:absolute;top:96px;width:26px;height:90px;background:var(--look-main);border-radius:18px;z-index:1}
+.avatar-sleeve.left{left:18px;transform:rotate(8deg)}
+.avatar-sleeve.right{right:18px;transform:rotate(-8deg)}
+.avatar-bottom{position:absolute;left:50%;top:174px;transform:translateX(-50%);width:92px;height:88px;background:var(--look-accent);z-index:2}
+.avatar-bottom.skirt{border-radius:18px 18px 34px 34px;clip-path:polygon(18% 0,82% 0,100% 100%,0 100%)}
+.avatar-bottom.pants{border-radius:20px;clip-path:polygon(10% 0,90% 0,84% 100%,58% 100%,52% 50%,48% 50%,42% 100%,16% 100%)}
+.avatar-legs{position:absolute;left:50%;top:246px;transform:translateX(-50%);width:74px;height:58px;display:flex;justify-content:space-between;z-index:0}
+.avatar-leg{width:24px;height:58px;background:var(--skin);border-radius:18px}
+.avatar-shoes{position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);width:90px;display:flex;justify-content:space-between}
+.avatar-shoe{width:34px;height:14px;background:#2d2d2d;border-radius:12px}
+.avatar-accessory{position:absolute;left:50%;top:110px;transform:translateX(24px);width:18px;height:18px;border-radius:50%;background:var(--look-highlight);border:2px solid rgba(255,255,255,.55);z-index:6;box-shadow:0 0 0 4px rgba(255,255,255,.18)}
+.avatar-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.meta-chip{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;border:1px solid var(--border);padding:5px 8px;background:#fff;color:var(--muted)}
+.control-group{margin-bottom:14px}
+.control-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
+.control-options{display:flex;gap:8px;flex-wrap:wrap}
+.control-btn{border:1px solid var(--border);background:#fff;padding:8px 10px;font-size:11px;cursor:pointer}
+.control-btn.active,.control-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.swatch-btn{width:28px;height:28px;padding:0;border-radius:50%}
+.avatar-caption{font-size:12px;line-height:1.8;color:var(--muted);margin-top:10px}
+
 /* CARD GENERATOR */
 .card-gen-section{padding:0}
 .card-gen-header{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;border-bottom:1px solid var(--border)}
@@ -206,15 +260,17 @@ body{font-family:'Noto Sans SC',sans-serif;background:linear-gradient(180deg,#f7
   .input-label-txt,.calc-btn,.elem-bars,.gz-date,.outfit-item-col{border-right:none}
   .input-label-txt,.calc-btn{width:100%;border-left:none}
   .color-section,.outfit-panel{grid-template-columns:1fr}
-  .play-top,.mode-switch,.vault-list,.capsule-hero{grid-template-columns:1fr}
+  .play-top,.mode-switch,.vault-list,.capsule-hero,.visual-grid,.avatar-layout,.draw-board,.motif-row{grid-template-columns:1fr}
   .gz-pillars{display:grid;grid-template-columns:1fr}
   .gz-pillar,.elem-bars,.zodiac-panel,.outfit-item-col{border-right:none;border-top:1px solid var(--border)}
   .fortune-section{grid-template-columns:1fr;gap:12px;padding:24px 20px}
   .card-preview{margin:20px}
-  .card-body,.gz-date,.elem-bars,.zodiac-panel,.outfit-item-col,.card-gen-header,.section-lbl,.oracle-panel,.metrics-panel,.capsule-section{padding-left:20px;padding-right:20px}
+  .card-body,.gz-date,.elem-bars,.zodiac-panel,.outfit-item-col,.card-gen-header,.section-lbl,.oracle-panel,.metrics-panel,.capsule-section,.draw-zone,.avatar-zone{padding-left:20px;padding-right:20px}
   .oracle-panel{border-right:none;border-bottom:1px solid var(--border)}
+  .draw-zone{border-right:none;border-bottom:1px solid var(--border)}
   .capsule-accent{border-right:none;border-bottom:1px solid var(--border);min-height:140px}
   .capsule-header{align-items:flex-start;flex-direction:column}
+  .avatar-stage{height:320px}
   .send-btn{padding:16px 20px}
 }
 </style>
@@ -319,6 +375,61 @@ body{font-family:'Noto Sans SC',sans-serif;background:linear-gradient(180deg,#f7
     </div>
   </div>
 
+  <div class="section-lbl">— VISUAL STUDIO · 抽卡与试衣</div>
+  <div class="visual-section">
+    <div class="visual-grid">
+      <div class="draw-zone">
+        <div class="visual-title">FLIP DRAW · 翻牌抽运势</div>
+        <div class="draw-board" id="drawBoard"></div>
+        <div class="motif-row" id="motifRow"></div>
+      </div>
+      <div class="avatar-zone">
+        <div class="visual-title">DRESS ME · 今日纸片人试衣</div>
+        <div class="avatar-layout">
+          <div>
+            <div class="avatar-stage">
+              <div class="avatar-shadow"></div>
+              <div class="avatar-figure" id="avatarFigure">
+                <div class="avatar-hair soft" id="avatarHair"></div>
+                <div class="avatar-head" id="avatarHead"></div>
+                <div class="avatar-neck"></div>
+                <div class="avatar-sleeve left" id="avatarSleeveLeft"></div>
+                <div class="avatar-sleeve right" id="avatarSleeveRight"></div>
+                <div class="avatar-torso" id="avatarTorso"></div>
+                <div class="avatar-bottom skirt" id="avatarBottom"></div>
+                <div class="avatar-accessory" id="avatarAccessory"></div>
+                <div class="avatar-legs">
+                  <div class="avatar-leg"></div>
+                  <div class="avatar-leg"></div>
+                </div>
+                <div class="avatar-shoes">
+                  <div class="avatar-shoe"></div>
+                  <div class="avatar-shoe"></div>
+                </div>
+              </div>
+            </div>
+            <div class="avatar-meta" id="avatarMeta"></div>
+          </div>
+          <div>
+            <div class="control-group">
+              <div class="control-label">肤色</div>
+              <div class="control-options" id="skinOptions"></div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">发型</div>
+              <div class="control-options" id="hairOptions"></div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">身材比例</div>
+              <div class="control-options" id="bodyOptions"></div>
+            </div>
+            <div class="avatar-caption" id="avatarCaption">输入生日后，这里会自动穿上今日最适配的颜色与搭配。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="section-lbl">— LOOKBOOK CARD · 穿搭卡片生成</div>
   <div class="card-gen-section">
     <div class="card-gen-header">
@@ -418,11 +529,27 @@ const COPY_TEMPLATES={
 
 let currentElement='火';let currentGZ='';let birthMonth=1;let birthDay=1;let lastGeneratedCopy='';
 let currentProfile=null;let currentMode='classic';let currentCapsuleText='';let currentCapsuleTags=[];
+let currentAvatarLook=null;
+
+const AVATAR_OPTIONS={
+  skin:[{id:'porcelain',color:'#F6D9C7'},{id:'warm',color:'#E7BC99'},{id:'deep',color:'#9D6C4B'}],
+  hair:[{id:'soft',label:'长直'},{id:'short',label:'短发'},{id:'wavy',label:'卷发'}],
+  body:[{id:'petite',label:'纤长',scale:0.94},{id:'balanced',label:'匀称',scale:1},{id:'curvy',label:'丰盈',scale:1.08}]
+};
+let avatarState={skin:'porcelain',hair:'soft',body:'balanced'};
 
 const MODE_CONFIG={
   classic:{label:'经典开运',desc:'主色稳住，适合日常和通勤。',scene:'OFFICE',tip:'主幸运色至少保留在上半身一处，会更显气场。'},
   bold:{label:'高光出片',desc:'拉高对比和光泽，更适合拍照与社交。',scene:'DATE',tip:'把最强幸运色放在脸附近，镜头里会更显亮。'},
   soft:{label:'桃花柔焦',desc:'降低攻击感，适合约会和轻松见人。',scene:'CASUAL',tip:'辅助色放在针织和配饰里，会更耐看更温柔。'}
+};
+
+const DRAW_REWARDS={
+  木:[['🌿','贵人色','开会穿主色'],['🍃','呼吸感','适合棉麻层次'],['🪴','新缘分','多用浅绿配饰']],
+  火:[['🔥','出片王','主色贴近脸部'],['🌺','桃花加成','适合裙装和耳饰'],['✨','高光感','多用暖金点缀']],
+  土:[['🍯','稳定运','适合风衣和针织'],['🧸','亲和力','米驼色更温柔'],['🏺','财气慢涨','包鞋同色更整洁']],
+  金:[['🌙','清冷感','适合金属感首饰'],['🪞','签约运','灰白对比更利落'],['❄️','高级脸','轮廓更干净']],
+  水:[['💧','灵感泉涌','深浅蓝叠穿'],['🫧','轻盈感','材质尽量流动'],['🌊','脑力日','冷色更稳心绪']]
 };
 
 function getElementOrder(scores){
@@ -456,6 +583,91 @@ function getLuckMetrics(profile,todayElem){
 
 function renderModes(){
   document.getElementById('modeSwitch').innerHTML=Object.entries(MODE_CONFIG).map(([key,mode])=>`<button class="mode-btn${key===currentMode?' active':''}" onclick="setMode('${key}')"><div class="mode-name">${mode.label}</div><div class="mode-desc">${mode.desc}</div></button>`).join('');
+}
+
+function renderDrawBoard(){
+  const rewards=DRAW_REWARDS[currentElement]||DRAW_REWARDS['土'];
+  const cards=[...rewards,...rewards].slice(0,6).sort(()=>Math.random()-.5);
+  document.getElementById('drawBoard').innerHTML=cards.map((item,idx)=>`<div class="draw-card" onclick="flipDrawCard(${idx})" data-draw-card="${idx}"><div class="draw-card-inner"><div class="draw-face draw-front"><div class="draw-front-mark">${currentElement}</div></div><div class="draw-face draw-back" style="background:linear-gradient(180deg,${EC[currentElement].colors[idx%3]},${EC[currentElement].colors[(idx+1)%3]})"><div class="draw-icon">${item[0]}</div><div class="draw-label">${item[1]}</div><div class="draw-note">${item[2]}</div></div></div></div>`).join('');
+}
+
+function flipDrawCard(idx){
+  const card=document.querySelector(`[data-draw-card="${idx}"]`);
+  if(!card||card.classList.contains('flipped')) return;
+  card.classList.add('flipped');
+  const flipped=document.querySelectorAll('.draw-card.flipped').length;
+  if(flipped===3) showToast('你已经翻出 3 张今日运势卡');
+}
+
+function renderMotifs(){
+  const colors=EC[currentElement].colors;
+  const motifs=[
+    `radial-gradient(circle at 28% 30%, ${colors[0]} 0 20%, transparent 21%), radial-gradient(circle at 70% 68%, ${colors[1]} 0 18%, transparent 19%), linear-gradient(135deg,#fff,${colors[2]})`,
+    `linear-gradient(120deg, ${colors[0]} 0 28%, transparent 28%), linear-gradient(220deg, ${colors[1]} 0 26%, transparent 26%), radial-gradient(circle at 50% 50%, ${colors[2]} 0 18%, #f8f3ec 19%)`,
+    `repeating-linear-gradient(135deg, ${colors[0]} 0 10px, ${colors[1]} 10px 20px, ${colors[2]} 20px 30px)`
+  ];
+  const labels=['运势纹样','主色气场','今日图腾'];
+  document.getElementById('motifRow').innerHTML=motifs.map((bg,i)=>`<div class="motif-card" data-label="${labels[i]}" style="background:${bg}"></div>`).join('');
+}
+
+function renderAvatarControls(){
+  document.getElementById('skinOptions').innerHTML=AVATAR_OPTIONS.skin.map(opt=>`<button class="control-btn swatch-btn${avatarState.skin===opt.id?' active':''}" onclick="setAvatarOption('skin','${opt.id}')" style="background:${opt.color}"></button>`).join('');
+  document.getElementById('hairOptions').innerHTML=AVATAR_OPTIONS.hair.map(opt=>`<button class="control-btn${avatarState.hair===opt.id?' active':''}" onclick="setAvatarOption('hair','${opt.id}')">${opt.label}</button>`).join('');
+  document.getElementById('bodyOptions').innerHTML=AVATAR_OPTIONS.body.map(opt=>`<button class="control-btn${avatarState.body===opt.id?' active':''}" onclick="setAvatarOption('body','${opt.id}')">${opt.label}</button>`).join('');
+}
+
+function setAvatarOption(type,value){
+  avatarState[type]=value;
+  localStorage.setItem('clourology-avatar',JSON.stringify(avatarState));
+  renderAvatarControls();
+  renderAvatarStudio();
+}
+
+function initAvatarState(){
+  try{
+    const saved=JSON.parse(localStorage.getItem('clourology-avatar')||'null');
+    if(saved) avatarState={...avatarState,...saved};
+  }catch(err){}
+  renderAvatarControls();
+}
+
+function buildAvatarLook(){
+  const outfits=getModeAdjustedOutfits();
+  const preferred=outfits.find(o=>o.scene===MODE_CONFIG[currentMode].scene)||outfits[0];
+  return{
+    scene:preferred.scene,
+    main:preferred.items[0],
+    accent:preferred.items[1]||preferred.items[0],
+    accessory:preferred.items[4]||preferred.items[2]||preferred.items[0],
+    bottomType:preferred.scene==='DATE'?'skirt':'pants'
+  };
+}
+
+function renderAvatarStudio(){
+  currentAvatarLook=buildAvatarLook();
+  const skin=AVATAR_OPTIONS.skin.find(opt=>opt.id===avatarState.skin)?.color||AVATAR_OPTIONS.skin[0].color;
+  const bodyScale=AVATAR_OPTIONS.body.find(opt=>opt.id===avatarState.body)?.scale||1;
+  const hair=document.getElementById('avatarHair');
+  const figure=document.getElementById('avatarFigure');
+  const bottom=document.getElementById('avatarBottom');
+  const torso=document.getElementById('avatarTorso');
+  const sleeveL=document.getElementById('avatarSleeveLeft');
+  const sleeveR=document.getElementById('avatarSleeveRight');
+  const accessory=document.getElementById('avatarAccessory');
+  document.getElementById('avatarHead').style.setProperty('--skin',skin);
+  document.querySelectorAll('.avatar-leg').forEach(el=>el.style.background=skin);
+  document.querySelector('.avatar-neck').style.background=skin;
+  figure.style.transform=`translateX(-50%) scale(${bodyScale})`;
+  hair.className=`avatar-hair ${avatarState.hair}`;
+  hair.style.background=avatarState.hair==='wavy'?'#3d2a26':avatarState.hair==='short'?'#2d2521':'#4a332d';
+  torso.style.background=currentAvatarLook.main[1];
+  sleeveL.style.background=currentAvatarLook.main[1];
+  sleeveR.style.background=currentAvatarLook.main[1];
+  bottom.style.background=currentAvatarLook.accent[1];
+  bottom.className=`avatar-bottom ${currentAvatarLook.bottomType}`;
+  accessory.style.background=currentAvatarLook.accessory[1];
+  document.getElementById('avatarMeta').innerHTML=[currentAvatarLook.scene,EC[currentElement].names[0],currentAvatarLook.main[0]].map(t=>`<div class="meta-chip">${t}</div>`).join('');
+  document.getElementById('avatarCaption').textContent=`已为你穿上 ${currentAvatarLook.main[0]} + ${currentAvatarLook.accent[0]}，主色采用 ${EC[currentElement].names[0]}。`;
 }
 
 function renderLuckBoard(todayElem){
@@ -525,7 +737,10 @@ function setMode(key){
   renderModes();
   renderOutfits();
   renderLuckBoard(getGZ(new Date()).dayElem);
+  renderDrawBoard();
+  renderMotifs();
   remixCapsule(true);
+  renderAvatarStudio();
   if(document.getElementById('cardOutput').classList.contains('vis')) renderCard();
 }
 
@@ -607,8 +822,11 @@ function renderAll(bd){
   renderModes();
   renderLuckBoard(todayGZ.dayElem);
   renderOutfits();
+  renderDrawBoard();
+  renderMotifs();
   remixCapsule(true);
   renderVault();
+  renderAvatarStudio();
 
   const fArr=FORTUNES[currentElement];
   document.getElementById('fortuneQuote').textContent=fArr[Math.floor(Math.random()*fArr.length)];
@@ -695,6 +913,7 @@ const today=new Date();
 const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 document.getElementById('mastDate').innerHTML=months[today.getMonth()]+' '+today.getDate()+'<br>'+today.getFullYear();
 document.getElementById('birthDate').max=today.toISOString().split('T')[0];
+initAvatarState();
 </script>
 <div class="toast" id="toast" aria-live="polite"></div>
 </main>
