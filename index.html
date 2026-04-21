@@ -177,6 +177,20 @@ body{font-family:'Noto Sans SC',sans-serif;background:linear-gradient(180deg,#f7
 .avatar-shadow{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);width:120px;height:18px;border-radius:50%;background:rgba(17,17,17,.08);filter:blur(8px)}
 .avatar-figure{position:absolute;left:50%;bottom:42px;transform:translateX(-50%);width:140px;height:278px}
 .avatar-head{position:absolute;left:50%;top:12px;transform:translateX(-50%);width:62px;height:72px;border-radius:48% 48% 44% 44%;background:var(--skin);z-index:4}
+.avatar-head.oval{border-radius:46% 46% 44% 44% / 44% 44% 48% 48%}
+.avatar-head.soft{border-radius:50% 50% 46% 46% / 44% 44% 50% 50%}
+.avatar-head.heart{border-radius:48% 48% 42% 42% / 38% 38% 56% 56%}
+.avatar-face{position:absolute;inset:0}
+.avatar-eye{position:absolute;top:30px;width:14px;height:8px;border-bottom:2px solid var(--eye);border-radius:0 0 12px 12px}
+.avatar-eye.left{left:14px}
+.avatar-eye.right{right:14px}
+.avatar-eye.soft{height:7px;border-bottom-width:2px}
+.avatar-eye.sharp{height:6px;transform:skewX(-12deg)}
+.avatar-eye.round{height:9px;border-radius:0 0 16px 16px}
+.avatar-blush{position:absolute;top:40px;width:16px;height:10px;border-radius:50%;background:rgba(224,132,132,.25);filter:blur(1px)}
+.avatar-blush.left{left:8px}
+.avatar-blush.right{right:8px}
+.avatar-mouth{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:18px;height:8px;border-bottom:2px solid var(--lip);border-radius:0 0 12px 12px}
 .avatar-hair{position:absolute;left:50%;top:0;transform:translateX(-50%);width:84px;height:98px;background:var(--hair);z-index:5}
 .avatar-hair.soft{border-radius:44px 44px 38px 38px / 52px 52px 32px 32px}
 .avatar-hair.short{border-radius:44px 44px 26px 26px / 36px 36px 24px 24px;height:74px}
@@ -196,6 +210,24 @@ body{font-family:'Noto Sans SC',sans-serif;background:linear-gradient(180deg,#f7
 .avatar-accessory{position:absolute;left:50%;top:110px;transform:translateX(24px);width:18px;height:18px;border-radius:50%;background:var(--look-highlight);border:2px solid rgba(255,255,255,.55);z-index:6;box-shadow:0 0 0 4px rgba(255,255,255,.18)}
 .avatar-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .meta-chip{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;border:1px solid var(--border);padding:5px 8px;background:#fff;color:var(--muted)}
+.fashion-card{margin-top:14px;border:1px solid var(--border);background:#fff;overflow:hidden}
+.fashion-card-top{display:grid;grid-template-columns:120px 1fr}
+.fashion-art{min-height:168px;position:relative;overflow:hidden}
+.fashion-art::before,.fashion-art::after{content:"";position:absolute;border-radius:999px;opacity:.5}
+.fashion-art::before{width:120px;height:120px;left:-20px;top:-16px;background:rgba(255,255,255,.3)}
+.fashion-art::after{width:88px;height:88px;right:-12px;bottom:-10px;background:rgba(255,255,255,.2)}
+.fashion-mini-figure{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);width:56px;height:132px}
+.fashion-mini-head{position:absolute;left:50%;top:0;transform:translateX(-50%);width:26px;height:30px;border-radius:48% 48% 44% 44%;background:var(--skin)}
+.fashion-mini-body{position:absolute;left:50%;top:30px;transform:translateX(-50%);width:34px;height:48px;border-radius:14px;background:var(--look-main)}
+.fashion-mini-bottom{position:absolute;left:50%;top:70px;transform:translateX(-50%);width:40px;height:48px;background:var(--look-accent);clip-path:polygon(16% 0,84% 0,100% 100%,0 100%)}
+.fashion-mini-leg{position:absolute;bottom:0;width:12px;height:24px;background:var(--skin);border-radius:10px}
+.fashion-mini-leg.left{left:14px}
+.fashion-mini-leg.right{right:14px}
+.fashion-info{padding:16px 18px}
+.fashion-kicker{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
+.fashion-title{font-family:'Cormorant Garamond',serif;font-size:28px;letter-spacing:3px;color:var(--ink);margin-bottom:8px}
+.fashion-copy{font-size:12px;line-height:1.8;color:var(--muted)}
+.fashion-footer{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--border);background:#fcfaf7}
 .control-group{margin-bottom:14px}
 .control-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
 .control-options{display:flex;gap:8px;flex-wrap:wrap}
@@ -391,7 +423,15 @@ body{font-family:'Noto Sans SC',sans-serif;background:linear-gradient(180deg,#f7
               <div class="avatar-shadow"></div>
               <div class="avatar-figure" id="avatarFigure">
                 <div class="avatar-hair soft" id="avatarHair"></div>
-                <div class="avatar-head" id="avatarHead"></div>
+                <div class="avatar-head oval" id="avatarHead">
+                  <div class="avatar-face">
+                    <div class="avatar-eye soft left" id="avatarEyeLeft"></div>
+                    <div class="avatar-eye soft right" id="avatarEyeRight"></div>
+                    <div class="avatar-blush left"></div>
+                    <div class="avatar-blush right"></div>
+                    <div class="avatar-mouth" id="avatarMouth"></div>
+                  </div>
+                </div>
                 <div class="avatar-neck"></div>
                 <div class="avatar-sleeve left" id="avatarSleeveLeft"></div>
                 <div class="avatar-sleeve right" id="avatarSleeveRight"></div>
@@ -409,6 +449,25 @@ body{font-family:'Noto Sans SC',sans-serif;background:linear-gradient(180deg,#f7
               </div>
             </div>
             <div class="avatar-meta" id="avatarMeta"></div>
+            <div class="fashion-card">
+              <div class="fashion-card-top">
+                <div class="fashion-art" id="fashionArt">
+                  <div class="fashion-mini-figure" id="fashionMiniFigure">
+                    <div class="fashion-mini-head" id="fashionMiniHead"></div>
+                    <div class="fashion-mini-body" id="fashionMiniBody"></div>
+                    <div class="fashion-mini-bottom" id="fashionMiniBottom"></div>
+                    <div class="fashion-mini-leg left"></div>
+                    <div class="fashion-mini-leg right"></div>
+                  </div>
+                </div>
+                <div class="fashion-info">
+                  <div class="fashion-kicker" id="fashionKicker">EDITORIAL LOOK</div>
+                  <div class="fashion-title" id="fashionTitle">Aura Muse</div>
+                  <div class="fashion-copy" id="fashionCopy">你的今日 look 将在这里生成。</div>
+                </div>
+              </div>
+              <div class="fashion-footer" id="fashionFooter"></div>
+            </div>
           </div>
           <div>
             <div class="control-group">
@@ -418,6 +477,14 @@ body{font-family:'Noto Sans SC',sans-serif;background:linear-gradient(180deg,#f7
             <div class="control-group">
               <div class="control-label">发型</div>
               <div class="control-options" id="hairOptions"></div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">脸型</div>
+              <div class="control-options" id="faceOptions"></div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">眼型</div>
+              <div class="control-options" id="eyeOptions"></div>
             </div>
             <div class="control-group">
               <div class="control-label">身材比例</div>
@@ -534,9 +601,11 @@ let currentAvatarLook=null;
 const AVATAR_OPTIONS={
   skin:[{id:'porcelain',color:'#F6D9C7'},{id:'warm',color:'#E7BC99'},{id:'deep',color:'#9D6C4B'}],
   hair:[{id:'soft',label:'长直'},{id:'short',label:'短发'},{id:'wavy',label:'卷发'}],
+  face:[{id:'oval',label:'椭圆'},{id:'soft',label:'柔圆'},{id:'heart',label:'心形'}],
+  eye:[{id:'soft',label:'温柔'},{id:'sharp',label:'冷感'},{id:'round',label:'灵动'}],
   body:[{id:'petite',label:'纤长',scale:0.94},{id:'balanced',label:'匀称',scale:1},{id:'curvy',label:'丰盈',scale:1.08}]
 };
-let avatarState={skin:'porcelain',hair:'soft',body:'balanced'};
+let avatarState={skin:'porcelain',hair:'soft',face:'oval',eye:'soft',body:'balanced'};
 
 const MODE_CONFIG={
   classic:{label:'经典开运',desc:'主色稳住，适合日常和通勤。',scene:'OFFICE',tip:'主幸运色至少保留在上半身一处，会更显气场。'},
@@ -613,6 +682,8 @@ function renderMotifs(){
 function renderAvatarControls(){
   document.getElementById('skinOptions').innerHTML=AVATAR_OPTIONS.skin.map(opt=>`<button class="control-btn swatch-btn${avatarState.skin===opt.id?' active':''}" onclick="setAvatarOption('skin','${opt.id}')" style="background:${opt.color}"></button>`).join('');
   document.getElementById('hairOptions').innerHTML=AVATAR_OPTIONS.hair.map(opt=>`<button class="control-btn${avatarState.hair===opt.id?' active':''}" onclick="setAvatarOption('hair','${opt.id}')">${opt.label}</button>`).join('');
+  document.getElementById('faceOptions').innerHTML=AVATAR_OPTIONS.face.map(opt=>`<button class="control-btn${avatarState.face===opt.id?' active':''}" onclick="setAvatarOption('face','${opt.id}')">${opt.label}</button>`).join('');
+  document.getElementById('eyeOptions').innerHTML=AVATAR_OPTIONS.eye.map(opt=>`<button class="control-btn${avatarState.eye===opt.id?' active':''}" onclick="setAvatarOption('eye','${opt.id}')">${opt.label}</button>`).join('');
   document.getElementById('bodyOptions').innerHTML=AVATAR_OPTIONS.body.map(opt=>`<button class="control-btn${avatarState.body===opt.id?' active':''}" onclick="setAvatarOption('body','${opt.id}')">${opt.label}</button>`).join('');
 }
 
@@ -654,7 +725,14 @@ function renderAvatarStudio(){
   const sleeveL=document.getElementById('avatarSleeveLeft');
   const sleeveR=document.getElementById('avatarSleeveRight');
   const accessory=document.getElementById('avatarAccessory');
-  document.getElementById('avatarHead').style.setProperty('--skin',skin);
+  const head=document.getElementById('avatarHead');
+  head.style.setProperty('--skin',skin);
+  head.className=`avatar-head ${avatarState.face}`;
+  document.getElementById('avatarEyeLeft').className=`avatar-eye ${avatarState.eye} left`;
+  document.getElementById('avatarEyeRight').className=`avatar-eye ${avatarState.eye} right`;
+  document.getElementById('avatarEyeLeft').style.setProperty('--eye','#3f3028');
+  document.getElementById('avatarEyeRight').style.setProperty('--eye','#3f3028');
+  document.getElementById('avatarMouth').style.setProperty('--lip',avatarState.skin==='deep'?'#8b4d4a':'#b76666');
   document.querySelectorAll('.avatar-leg').forEach(el=>el.style.background=skin);
   document.querySelector('.avatar-neck').style.background=skin;
   figure.style.transform=`translateX(-50%) scale(${bodyScale})`;
@@ -668,6 +746,15 @@ function renderAvatarStudio(){
   accessory.style.background=currentAvatarLook.accessory[1];
   document.getElementById('avatarMeta').innerHTML=[currentAvatarLook.scene,EC[currentElement].names[0],currentAvatarLook.main[0]].map(t=>`<div class="meta-chip">${t}</div>`).join('');
   document.getElementById('avatarCaption').textContent=`已为你穿上 ${currentAvatarLook.main[0]} + ${currentAvatarLook.accent[0]}，主色采用 ${EC[currentElement].names[0]}。`;
+  document.getElementById('fashionArt').style.background=`linear-gradient(155deg,${currentAvatarLook.main[1]},${currentAvatarLook.accent[1]})`;
+  document.getElementById('fashionMiniHead').style.background=skin;
+  document.getElementById('fashionMiniBody').style.background=currentAvatarLook.main[1];
+  document.getElementById('fashionMiniBottom').style.background=currentAvatarLook.accent[1];
+  document.querySelectorAll('.fashion-mini-leg').forEach(el=>el.style.background=skin);
+  document.getElementById('fashionTitle').textContent=`${MODE_CONFIG[currentMode].label} Muse`;
+  document.getElementById('fashionKicker').textContent=`${currentAvatarLook.scene} · ${currentElement} ELEMENT`;
+  document.getElementById('fashionCopy').textContent=`${currentAvatarLook.main[0]} 作为主造型，${currentAvatarLook.accent[0]} 做层次，配上 ${currentAvatarLook.accessory[0]}，会更像今天的你。`;
+  document.getElementById('fashionFooter').innerHTML=[EC[currentElement].names[0],currentAvatarLook.main[0],avatarState.face,avatarState.eye].map(item=>`<div class="meta-chip">${item}</div>`).join('');
 }
 
 function renderLuckBoard(todayElem){
