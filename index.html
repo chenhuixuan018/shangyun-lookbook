@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>裳运 CLOUROLOGY</title>
+<meta name="description" content="高定 Lookbook 风格的五行穿搭日历，含今日幸运色、穿搭建议与小红书文案卡片。">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+SC:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#111;--muted:#888;--faint:#bbb;--border:#e0e0e0;
+  --accent:#1a1a1a;--gold:#b8955a;--warm:#f5f0eb;--pink-pale:#fce8e8;
+}
+body{font-family:'Noto Sans SC',sans-serif;background:linear-gradient(180deg,#f7f2ec 0%,#ffffff 22%,#f8f4ef 100%);color:var(--ink)}
+.page-shell{min-height:100vh;padding:32px 16px;display:flex;justify-content:center}
+.wrap{background:#fff;color:var(--ink);max-width:680px;width:100%;border:1px solid rgba(17,17,17,.08);box-shadow:0 24px 80px rgba(17,17,17,.08)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(12px);background:#111;color:#fff;padding:10px 16px;font-size:12px;letter-spacing:.5px;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+.toast.vis{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* HEADER — Lookbook masthead */
+.masthead{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;padding:32px 32px 0;border-bottom:1px solid var(--border);padding-bottom:20px}
+.mast-left{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);line-height:1.8}
+.mast-center{text-align:center}
+.brand-title{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;letter-spacing:8px;color:var(--ink);line-height:1}
+.brand-sub{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:4px;color:var(--muted);margin-top:6px}
+.mast-right{text-align:right;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted);line-height:1.8}
+
+/* INPUT ROW */
+.input-bar{display:flex;align-items:center;gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:0}
+.input-label-txt{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted);padding:0 20px;white-space:nowrap;border-right:1px solid var(--border)}
+.birth-input{flex:1;border:none;outline:none;font-family:'Noto Sans SC',sans-serif;font-size:13px;color:var(--ink);padding:14px 20px;background:transparent}
+.calc-btn{border:none;border-left:1px solid var(--border);background:var(--ink);color:#fff;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;padding:14px 20px;cursor:pointer;white-space:nowrap;transition:background .2s}
+.calc-btn:hover{background:#333}
+
+/* LOADING */
+.loading-bar{display:none;height:2px;background:var(--border);overflow:hidden}
+.loading-bar.vis{display:block}
+.loading-progress{height:100%;background:var(--ink);width:0;transition:width 1.6s ease}
+
+/* CONTENT */
+.content{display:none;padding:0}
+.content.vis{display:block}
+
+/* Section label */
+.section-lbl{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:4px;color:var(--muted);padding:20px 32px 12px;border-bottom:1px solid var(--border)}
+
+/* GANZHI strip */
+.ganzhi-strip{display:flex;align-items:stretch;border-bottom:1px solid var(--border)}
+.gz-date{flex:1;padding:20px 32px;border-right:1px solid var(--border)}
+.gz-date-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:6px}
+.gz-date-val{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--ink);letter-spacing:4px}
+.gz-pillars{display:flex;flex:2}
+.gz-pillar{flex:1;padding:20px 24px;border-right:1px solid var(--border);text-align:center}
+.gz-pillar:last-child{border-right:none}
+.gz-pillar-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
+.gz-pillar-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;letter-spacing:6px;color:var(--ink)}
+.gz-pillar-elem{font-family:'Space Mono',monospace;font-size:9px;color:var(--gold);margin-top:4px;letter-spacing:2px}
+
+/* COLOR GRID — magazine layout */
+.color-section{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;border-bottom:1px solid var(--border);min-height:160px}
+.color-block{position:relative;overflow:hidden;border-right:1px solid var(--border);cursor:pointer;transition:opacity .2s}
+.color-block:last-child{border-right:none}
+.color-block:hover{opacity:.9}
+.color-fill{height:100%;min-height:160px;display:flex;flex-direction:column;justify-content:flex-end;padding:16px}
+.color-tag{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;background:rgba(255,255,255,.9);color:var(--ink);display:inline-block;padding:3px 8px;margin-bottom:6px;align-self:flex-start}
+.color-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3)}
+.color-hex{font-family:'Space Mono',monospace;font-size:8px;color:rgba(255,255,255,.7);margin-top:2px}
+
+/* ELEMENT BARS */
+.element-section{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+.elem-bars{padding:24px 32px;border-right:1px solid var(--border)}
+.elem-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.elem-row:last-child{margin-bottom:0}
+.elem-char{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;width:18px;color:var(--ink)}
+.elem-track{flex:1;height:1px;background:var(--border);position:relative}
+.elem-fill{height:1px;background:var(--ink);transition:width 1s ease}
+.elem-pct{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);width:28px;text-align:right}
+.zodiac-panel{padding:24px 32px}
+.zodiac-big{font-family:'Cormorant Garamond',serif;font-size:32px;font-style:italic;font-weight:300;color:var(--ink);margin-bottom:8px}
+.zodiac-en{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:12px}
+.zodiac-elem{font-family:'Space Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:10px}
+.zodiac-hint{font-family:'Noto Sans SC',sans-serif;font-size:11px;color:var(--muted);line-height:1.8}
+
+/* OUTFITS — horizontal editorial */
+.outfit-section{border-bottom:1px solid var(--border)}
+.outfit-tabs{display:flex;border-bottom:1px solid var(--border)}
+.outfit-tab{flex:1;padding:14px 24px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted);cursor:pointer;border-right:1px solid var(--border);text-align:center;transition:all .2s;border-bottom:2px solid transparent}
+.outfit-tab:last-child{border-right:none}
+.outfit-tab.active{color:var(--ink);border-bottom:2px solid var(--ink)}
+.outfit-tab:hover{color:var(--ink)}
+.outfit-panels{}
+.outfit-panel{display:none;grid-template-columns:1fr 1fr 1fr;border-collapse:collapse}
+.outfit-panel.active{display:grid}
+.outfit-item-col{padding:24px 28px;border-right:1px solid var(--border)}
+.outfit-item-col:last-child{border-right:none}
+.outfit-scene{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;color:var(--gold);margin-bottom:16px}
+.outfit-piece{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.outfit-piece:last-of-type{border-bottom:none;margin-bottom:12px}
+.piece-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.piece-name{font-family:'Noto Sans SC',sans-serif;font-size:11px;color:var(--ink)}
+.outfit-tip-txt{font-family:'Noto Sans SC',sans-serif;font-size:10px;color:var(--muted);line-height:1.8;font-style:italic;border-top:1px solid var(--border);padding-top:12px}
+
+/* FORTUNE QUOTE — magazine editorial */
+.fortune-section{padding:32px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
+.fortune-mark{font-family:'Cormorant Garamond',serif;font-size:60px;font-weight:300;color:var(--border);line-height:.8}
+.fortune-quote{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;font-style:italic;color:var(--ink);line-height:1.7;margin-bottom:12px}
+.fortune-attr{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;color:var(--muted)}
+
+/* CARD GENERATOR */
+.card-gen-section{padding:0}
+.card-gen-header{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;border-bottom:1px solid var(--border)}
+.card-gen-title{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:4px;color:var(--muted)}
+.gen-btn{background:var(--ink);color:#fff;border:none;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;padding:10px 20px;cursor:pointer;transition:background .2s}
+.gen-btn:hover{background:#333}
+.gen-btn:active{transform:scale(.98)}
+.gen-btn.loading{background:var(--muted);cursor:not-allowed}
+
+/* LOOKBOOK CARD OUTPUT */
+.card-output{display:none;border-top:1px solid var(--border)}
+.card-output.vis{display:block}
+.card-preview{margin:24px 32px;border:1px solid var(--border)}
+.card-inner{background:#fff;padding:0;overflow:hidden}
+.card-top-strip{height:4px}
+.card-body{padding:28px 28px 20px}
+.card-header-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.card-brand{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;letter-spacing:6px;color:var(--ink)}
+.card-date-chip{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);text-align:right;line-height:1.8}
+.card-colors-row{display:flex;gap:8px;margin-bottom:20px}
+.card-color-chip{display:flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--border)}
+.chip-dot{width:10px;height:10px;border-radius:50%}
+.chip-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--muted)}
+.card-copy{font-family:'Noto Sans SC',sans-serif;font-size:12px;color:var(--ink);line-height:2;margin-bottom:16px}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:16px}
+.card-tag{font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);border:0.5px solid var(--border);padding:3px 8px}
+.card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--border)}
+.card-footer-brand{font-family:'Cormorant Garamond',serif;font-size:11px;font-style:italic;color:var(--muted);letter-spacing:2px}
+.card-footer-date{font-family:'Space Mono',monospace;font-size:8px;color:var(--faint)}
+
+.send-btn{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-top:1px solid var(--border);cursor:pointer;background:transparent;border-left:none;border-right:none;border-bottom:none;width:100%;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted);transition:all .2s}
+.send-btn:hover{background:var(--ink);color:#fff}
+.send-btn-arrow{font-size:14px}
+
+/* EMPTY */
+.empty{text-align:center;padding:60px 32px;border-bottom:1px solid var(--border)}
+.empty-num{font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:300;color:var(--border);display:block;margin-bottom:12px}
+.empty-txt{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted)}
+
+/* AI generating state */
+.ai-typing{padding:16px 32px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);border-top:1px solid var(--border);display:none}
+.ai-typing.vis{display:block}
+.dot-anim span{animation:blink 1.4s infinite;display:inline-block}
+.dot-anim span:nth-child(2){animation-delay:.3s}
+.dot-anim span:nth-child(3){animation-delay:.6s}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+@media (max-width:720px){
+  .page-shell{padding:0}
+  .wrap{border:none;box-shadow:none}
+  .masthead{grid-template-columns:1fr;text-align:center;gap:12px;padding:24px 20px 16px}
+  .mast-left,.mast-right{text-align:center}
+  .input-bar,.ganzhi-strip,.element-section,.card-gen-header,.card-footer{flex-direction:column;display:flex}
+  .input-label-txt,.calc-btn,.elem-bars,.gz-date,.outfit-item-col{border-right:none}
+  .input-label-txt,.calc-btn{width:100%;border-left:none}
+  .color-section,.outfit-panel{grid-template-columns:1fr}
+  .gz-pillars{display:grid;grid-template-columns:1fr}
+  .gz-pillar,.elem-bars,.zodiac-panel,.outfit-item-col{border-right:none;border-top:1px solid var(--border)}
+  .fortune-section{grid-template-columns:1fr;gap:12px;padding:24px 20px}
+  .card-preview{margin:20px}
+  .card-body,.gz-date,.elem-bars,.zodiac-panel,.outfit-item-col,.card-gen-header,.section-lbl{padding-left:20px;padding-right:20px}
+  .send-btn{padding:16px 20px}
+}
+</style>
+</head>
+<body>
+<main class="page-shell">
+<h1 class="sr-only">裳运 CLOUROLOGY — 高定Lookbook版风水穿搭日历，含今日五行、幸运色与小红书穿搭卡片生成</h1>
+
+<div class="wrap">
+
+<div class="masthead">
+  <div class="mast-left">VOL. 01 · SS 2026<br>FENGSHUI FASHION</div>
+  <div class="mast-center">
+    <div class="brand-title">裳运</div>
+    <div class="brand-sub">C L O U R O L O G Y</div>
+  </div>
+  <div class="mast-right" id="mastDate">LOADING<br>TODAY</div>
+</div>
+
+<div class="input-bar">
+  <div class="input-label-txt">BIRTH DATE</div>
+  <input type="date" class="birth-input" id="birthDate" />
+  <button class="calc-btn" onclick="calculate()">CALCULATE ↗</button>
+</div>
+
+<div class="loading-bar" id="loadBar"><div class="loading-progress" id="loadProg"></div></div>
+
+<div id="emptyState" class="empty">
+  <span class="empty-num">五行</span>
+  <div class="empty-txt">输入生日，解锁今日幸运色与专属穿搭</div>
+</div>
+
+<div class="content" id="mainContent">
+
+  <div class="section-lbl">— TODAY'S GANZHI · 今日干支</div>
+  <div class="ganzhi-strip">
+    <div class="gz-date">
+      <div class="gz-date-label">DATE</div>
+      <div class="gz-date-val" id="gzDateVal">—</div>
+    </div>
+    <div class="gz-pillars" id="gzPillars"></div>
+  </div>
+
+  <div class="section-lbl">— LUCKY COLORS · 今日幸运色</div>
+  <div class="color-section" id="colorSection"></div>
+
+  <div class="section-lbl">— NATAL ELEMENTS & ZODIAC · 本命五行与星座</div>
+  <div class="element-section">
+    <div class="elem-bars" id="elemBars"></div>
+    <div class="zodiac-panel" id="zodiacPanel"></div>
+  </div>
+
+  <div class="section-lbl">— STYLING GUIDE · 穿搭指南</div>
+  <div class="outfit-section">
+    <div class="outfit-tabs" id="outfitTabs"></div>
+    <div class="outfit-panels" id="outfitPanels"></div>
+  </div>
+
+  <div class="section-lbl">— TODAY'S FORTUNE · 今日运言</div>
+  <div class="fortune-section">
+    <div class="fortune-mark">"</div>
+    <div>
+      <div class="fortune-quote" id="fortuneQuote"></div>
+      <div class="fortune-attr">CLOUROLOGY · 裳运 · <span id="fortuneElem"></span></div>
+    </div>
+  </div>
+
+  <div class="section-lbl">— LOOKBOOK CARD · 穿搭卡片生成</div>
+  <div class="card-gen-section">
+    <div class="card-gen-header">
+      <div class="card-gen-title">GENERATE TODAY'S OOTD CARD</div>
+      <button class="gen-btn" id="genBtn" onclick="generateCard()">生成穿搭卡片 ↗</button>
+    </div>
+    <div class="ai-typing" id="aiTyping">AI 正在生成专属文案 <span class="dot-anim"><span>.</span><span>.</span><span>.</span></span></div>
+    <div class="card-output" id="cardOutput">
+      <div class="card-preview">
+        <div class="card-inner">
+          <div class="card-top-strip" id="cardStrip"></div>
+          <div class="card-body">
+            <div class="card-header-row">
+              <div class="card-brand">裳运</div>
+              <div class="card-date-chip" id="cardDateChip"></div>
+            </div>
+            <div class="card-colors-row" id="cardColorsRow"></div>
+            <div class="card-copy" id="cardCopy"></div>
+            <div class="card-tags" id="cardTags"></div>
+            <div class="card-footer">
+              <div class="card-footer-brand">以衣为阵 · 借色筑运</div>
+              <div class="card-footer-date" id="cardFooterDate"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="send-btn" onclick="sendToXHS()">
+        <span>复制小红书文案 ↗</span>
+        <span class="send-btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const HS=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const EB=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const SE=['木','木','火','火','土','土','金','金','水','水'];
+const BE=['水','土','木','木','土','火','火','土','金','金','土','水'];
+const ZH=['摩羯','摩羯','水瓶','双鱼','白羊','金牛','双子','巨蟹','狮子','处女','天秤','天蝎','射手','摩羯'];
+const ZEN=['Capricorn','Capricorn','Aquarius','Pisces','Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn'];
+const ZMAP={'白羊':{e:'火',h:'火星守护，强化行动力与勇气'},'金牛':{e:'土',h:'金星守护，利财运与感官享受'},'双子':{e:'金',h:'水星守护，助沟通与思维灵动'},'巨蟹':{e:'水',h:'月亮守护，增直觉与情感深度'},'狮子':{e:'火',h:'太阳守护，强化魅力与领导力'},'处女':{e:'土',h:'水星守护，提升细致与分析力'},'天秤':{e:'金',h:'金星守护，促和谐与美学品位'},'天蝎':{e:'水',h:'冥王星守护，增磁性与洞察力'},'射手':{e:'火',h:'木星守护，扩大格局与好运场'},'摩羯':{e:'土',h:'土星守护，增耐力与事业稳固'},'水瓶':{e:'金',h:'天王星守护，激活创新与独特性'},'双鱼':{e:'水',h:'海王星守护，增灵性与创意流动'}};
+
+const EC={
+  '木':{colors:['#3D6B3A','#6B9E5A','#9DC77A','#C8C8C8'],names:['苍翠绿','竹青色','嫩芽绿','慎用灰'],tags:['大吉色','次吉色','招财色','慎用色'],hex:['#3D6B3A','#6B9E5A','#9DC77A','#C8C8C8']},
+  '火':{colors:['#B83A2A','#D4796A','#E8A898','#C8C8C8'],names:['朱砂红','珊瑚橘','桃花粉','慎用灰'],tags:['大吉色','次吉色','招财色','慎用色'],hex:['#B83A2A','#D4796A','#E8A898','#C8C8C8']},
+  '土':{colors:['#7A5020','#B8884A','#D8C098','#C8C8C8'],names:['赭黄色','琥珀金','象牙白','慎用灰'],tags:['大吉色','次吉色','招财色','慎用色'],hex:['#7A5020','#B8884A','#D8C098','#C8C8C8']},
+  '金':{colors:['#505060','#9898A8','#D8D8E0','#C8C8C8'],names:['铁灰色','月白银','霜雪白','慎用灰'],tags:['大吉色','次吉色','招财色','慎用色'],hex:['#505060','#9898A8','#D8D8E0','#C8C8C8']},
+  '水':{colors:['#1A406A','#3A6A9A','#7AAAC8','#C8C8C8'],names:['深海蓝','天青色','水雾蓝','慎用灰'],tags:['大吉色','次吉色','招财色','慎用色'],hex:['#1A406A','#3A6A9A','#7AAAC8','#C8C8C8']}
+};
+
+const OUTFITS={
+  '木':[
+    {scene:'OFFICE',items:[['深绿西装外套','#3D6B3A'],['白色真丝衬衫','#F5F0E8'],['黑色直筒裤','#2C2C2C'],['裸色高跟鞋','#C4A882'],['翡翠耳饰','#5A9C6B']],tip:'木旺贵人运旺，绿系上装配金属饰品，职场气场全开'},
+    {scene:'DATE',items:[['竹绿碎花裙','#6B9E5A'],['米白开衫','#F0E8DC'],['棕色编织包','#8B6040'],['厚底帆布鞋','#D4C8B8'],['珍珠发夹','#F0EDE8']],tip:'木生火，点缀粉色配饰，桃花运顺天时'},
+    {scene:'CASUAL',items:[['军绿卫衣','#4A6A3C'],['卡其休闲裤','#B8A882'],['白色运动鞋','#F0EDE8'],['草编帽','#C8A86A'],['绿碧玺手链','#5AAC7A']],tip:'大地系穿搭补充木气，亲近自然效果更佳'}
+  ],
+  '火':[
+    {scene:'OFFICE',items:[['珊瑚红衬衫','#D4796A'],['深色修身西裤','#3C2C2C'],['驼色小西装','#C4956A'],['裸粉高跟','#D4B09A'],['红绳手链','#C03A2A']],tip:'火旺职场，红系上装引贵人，气场热辣不失专业'},
+    {scene:'DATE',items:[['玫瑰红连衣裙','#C85A6A'],['米白小外套','#F0E8DC'],['金色细跟鞋','#C9A96E'],['红绳编织包','#B44040'],['珊瑚石耳环','#E09080']],tip:'火色整体桃花引力满，金色配饰助火生土财运'},
+    {scene:'CASUAL',items:[['橘色T恤','#E08040'],['米白宽腿裤','#EDE8E0'],['白色小白鞋','#F5F2EE'],['草莓色帆布包','#D46060'],['橙色发带','#E89040']],tip:'周末火色提振精气神，出行遇人皆得好印象'}
+  ],
+  '土':[
+    {scene:'OFFICE',items:[['驼色风衣','#C4956A'],['米白针织衫','#F0E8D8'],['杏色直筒裙','#E0C8A0'],['棕色皮质包','#8B6040'],['琥珀项链','#C9901A']],tip:'大地色系稳健显贵气，利财运与职场稳定性'},
+    {scene:'DATE',items:[['奶茶针织裙','#D4B88C'],['米白小外套','#F0E8DC'],['浅金平底鞋','#D4B86E'],['竹编包','#B89050'],['玛瑙手串','#C07050']],tip:'土系温柔持重，约会显亲切，易得信任'},
+    {scene:'CASUAL',items:[['米黄卫衣','#E8D8B0'],['焦糖直筒裤','#A07848'],['棕色厚底鞋','#8A6040'],['麻布手提袋','#C4A870'],['虎眼石手链','#9B7030']],tip:'土色稳定气场，适合购物家居等实务活动'}
+  ],
+  '金':[
+    {scene:'OFFICE',items:[['冷灰西装','#888898'],['白色修身上衣','#F5F2EE'],['黑色烟管裤','#2C2C2C'],['银色高跟鞋','#C0C0C8'],['水晶耳钉','#D8D8E0']],tip:'金旺清冽如月，冷白系气场利签约谈判决策'},
+    {scene:'DATE',items:[['月白纱裙','#EEE8F0'],['银灰小外套','#B0B0BA'],['银色圆头鞋','#C4C4CC'],['白色链条包','#F0ECEC'],['月光石项链','#E0DCE8']],tip:'月白银色调约会，清冷仙气令人印象深刻'},
+    {scene:'CASUAL',items:[['浅灰T恤','#C8C8D0'],['白色宽腿裤','#F0EDED'],['白色运动鞋','#F5F2EE'],['银色腰包','#B8B8C0'],['白玉手镯','#F0EDED']],tip:'素净穿搭佩白玉银饰，气场清正辟邪'}
+  ],
+  '水':[
+    {scene:'OFFICE',items:[['深海蓝西装','#2A5080'],['白色真丝衬衫','#F5F2EE'],['藏蓝直筒裤','#1A3A60'],['黑色皮鞋','#2A2A2A'],['青金石胸针','#2A5890']],tip:'水旺思路清晰，蓝系着装利脑力工作与创意'},
+    {scene:'DATE',items:[['天青碎花裙','#6A9EC0'],['米白开衫','#F0E8DC'],['深蓝帆布包','#2A4A70'],['蓝色平底鞋','#4A7AAA'],['海蓝宝手链','#5090C0']],tip:'水系知性优雅，适合文艺类约会场合'},
+    {scene:'CASUAL',items:[['海军蓝连帽衫','#2A4A70'],['浅灰宽腿裤','#C0BCBC'],['白色小白鞋','#F5F2EE'],['藏蓝帆布包','#1A3A60'],['蓝玛瑙手串','#3A6A90']],tip:'蓝色穿搭助思维流动，适合阅读创作'}
+  ]
+};
+
+const FORTUNES={
+  '木':['以苍翠之色为衣，借木气升发之势，万物生而向阳，贵人有缘相见，今日宜动，宜创，宜拓展边界。','木日之能量，如春芽破土，清晨着一抹绿，天地之木气入体，思路通达，人缘顺遂，事半功倍。'],
+  '火':['以朱红之色为阵，借火气热忱之势，阳气充盈四野，磁场炽热而有吸引力，今日宜展，宜见，宜发光。','着火色而行，如烈日之下一朵灼灼盛开的花，今日运势炎上，感情事业皆可主动出击，好运自来。'],
+  '土':['以大地之色为衣，借土气厚重之势，稳中有进，万事有根，今日宜谈，宜稳，宜积累。','土承万物之重，着驼色琥珀而行，气场温厚而稳，财缘有聚，贵人踏实，今日一切皆可托付。'],
+  '金':['以月白之色为阵，借金气清正之势，头脑清晰如镜，今日宜决策，宜签约，宜收获。','金日凛然通透，着冷白银灰，气场清正如刃，言语有力，思路犀利，今日一语中的，贵气自显。'],
+  '水':['以深蓝之色为衣，借水气灵动之势，智慧如泉涌，今日宜学，宜创，宜感悟。','水日柔中带韧，情绪如水面平静，着蓝系而行，直觉敏锐，灵感大开，今日一切皆可流动。']
+};
+
+const COPY_TEMPLATES={
+  '木':{emoji:'🌿',hook:'今日木气盎然，万物生发之时！',main:'[五行推算] 今天是{gz}日，五行属木🌿\n\n今日三色推荐：\n✦ 苍翠绿（大吉）— 贵人相见，事业开拓\n✦ 竹青色（次吉）— 学业顺遂，清气满满\n✦ 嫩芽绿（招财）— 新缘新机，生机勃发\n\n今日穿搭重点：\n深绿外套 + 白色真丝衬衫\n翡翠配饰提气场，绿系上装遇贵人✨',tip:'⚠️ 慎穿大面积白色——金克木，今日需要生长感而非收敛感',tags:['木日穿搭','五行穿衣法','绿系OOTD','风水穿搭','开运穿搭','苍翠绿','裳运CLOUROLOGY','玄学穿搭']},
+  '火':{emoji:'🔥',hook:'火日能量MAX，今天要穿最热辣的那件！',main:'[五行推算] 今天是{gz}日，五行属火🔥\n\n今日三色推荐：\n✦ 朱砂红（大吉）— 旺气场，桃花运爆棚\n✦ 珊瑚橘（次吉）— 甜美磁场，人见人爱\n✦ 桃花粉（招财）— 喜悦福气，自带暖场buff\n\n今日穿搭重点：\n珊瑚红衬衫 + 驼色小西装\n金色配饰火生土，财气桃花一起来✨',tip:'⚠️ 慎穿大面积黑蓝——水克火，想被看见就要大胆穿亮色',tags:['火日穿搭','五行穿衣法','红系OOTD','风水穿搭','开运穿搭','朱砂红','裳运CLOUROLOGY','桃花运']},
+  '土':{emoji:'✨',hook:'土日稳稳的，今天穿大地色系就对了！',main:'[五行推算] 今天是{gz}日，五行属土✨\n\n今日三色推荐：\n✦ 赭黄色（大吉）— 财运厚重，稳中求进\n✦ 琥珀金（次吉）— 贵人助力，流光溢彩\n✦ 象牙白（招财）— 柔和包容，平稳安康\n\n今日穿搭重点：\n驼色风衣 + 米白针织 + 棕色皮质包\n大地色系三件套，气场温厚贵人来✨',tip:'⚠️ 慎穿大面积绿色——木克土，今日需要稳健而非升发',tags:['土日穿搭','五行穿衣法','大地色OOTD','风水穿搭','开运穿搭','琥珀金','裳运CLOUROLOGY','稳健运势']},
+  '金':{emoji:'🌙',hook:'金日清冽，今天做最通透清冷的那种仙女！',main:'[五行推算] 今天是{gz}日，五行属金🌙\n\n今日三色推荐：\n✦ 铁灰色（大吉）— 沉稳权威，职场气场\n✦ 月白银（次吉）— 清冽通透，智慧洞见\n✦ 霜雪白（招财）— 纯净贵气，利运势提升\n\n今日穿搭重点：\n冷灰西装 + 白色上衣 + 银色配饰\n冷白系气场，今日谈判签约最佳✨',tip:'⚠️ 慎穿大面积红色——火克金，今日需要清正而非热情',tags:['金日穿搭','五行穿衣法','冷白OOTD','风水穿搭','开运穿搭','月白银','裳运CLOUROLOGY','清冷气场']},
+  '水':{emoji:'💙',hook:'水日智慧流动，今天穿蓝色开大脑！',main:'[五行推算] 今天是{gz}日，五行属水💙\n\n今日三色推荐：\n✦ 深海蓝（大吉）— 智慧深邃，才思敏捷\n✦ 天青色（次吉）— 灵动通透，沟通顺畅\n✦ 水雾蓝（招财）— 淡然清远，心宁气顺\n\n今日穿搭重点：\n深海蓝西装 + 白色真丝衬衫\n青金石配饰增智慧，蓝系穿搭思如泉涌✨',tip:'⚠️ 慎穿大面积黄色——土克水，今日需要流动感而非厚重',tags:['水日穿搭','五行穿衣法','蓝系OOTD','风水穿搭','开运穿搭','深海蓝','裳运CLOUROLOGY','智慧运势']}
+};
+
+let currentElement='火';let currentGZ='';let birthMonth=1;let birthDay=1;let lastGeneratedCopy='';
+
+function getGZ(date){
+  const base=new Date(1900,0,31);
+  const total=Math.floor((date-base)/86400000);
+  const si=(((total%10)+10)%10);
+  const bi=(((total%12)+12)%12);
+  const yi=((date.getFullYear()-1900)*12+(date.getMonth()))%10;
+  const ybi=((date.getFullYear()-1924)%12+60)%12;
+  return{
+    year:HS[((date.getFullYear()-1924)%10+10)%10]+EB[ybi],
+    month:HS[yi]+EB[(date.getMonth()+2)%12],
+    day:HS[si]+EB[bi],
+    dayElem:SE[si],
+    yearElem:SE[((date.getFullYear()-1924)%10+10)%10]
+  };
+}
+
+function getZodiac(m,d){
+  const cuts=[20,19,21,20,21,21,23,23,23,23,22,22];
+  const idx=d<=cuts[m-1]?m-1:m;
+  return{zh:ZH[idx],en:ZEN[idx]};
+}
+
+function getPersonalElems(bd){
+  const gz=getGZ(bd);
+  const e={木:0,火:0,土:0,金:0,水:0};
+  [gz.year[0],gz.month[0],gz.day[0]].forEach(s=>{const i=HS.indexOf(s);if(i>=0)e[SE[i]]++;});
+  [gz.year[1],gz.month[1],gz.day[1]].forEach(b=>{const i=EB.indexOf(b);if(i>=0)e[BE[i]]++;});
+  return e;
+}
+
+function calculate(){
+  const v=document.getElementById('birthDate').value;
+  if(!v){alert('请选择出生日期');return;}
+  const bd=new Date(v);
+  birthMonth=bd.getMonth()+1;birthDay=bd.getDate();
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('mainContent').classList.remove('vis');
+  const lb=document.getElementById('loadBar');lb.classList.add('vis');
+  const lp=document.getElementById('loadProg');
+  requestAnimationFrame(()=>{lp.style.width='100%';});
+  setTimeout(()=>{
+    lb.classList.remove('vis');lp.style.width='0';
+    renderAll(bd);
+    document.getElementById('mainContent').classList.add('vis');
+  },1700);
+}
+
+function renderAll(bd){
+  const today=new Date();
+  const todayGZ=getGZ(today);
+  currentElement=todayGZ.dayElem;
+  currentGZ=todayGZ.day;
+
+  const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  document.getElementById('mastDate').innerHTML=months[today.getMonth()]+' '+today.getDate()+'<br>'+today.getFullYear();
+  document.getElementById('gzDateVal').textContent=today.getFullYear()+'.'+(today.getMonth()+1)+'.'+today.getDate();
+
+  const gz=getGZ(bd);
+  const pillarsData=[{l:'YEAR PILLAR',v:todayGZ.year,e:todayGZ.yearElem},{l:'MONTH PILLAR',v:todayGZ.month,e:SE[HS.indexOf(todayGZ.month[0])]||'—'},{l:'DAY PILLAR',v:todayGZ.day,e:currentElement}];
+  document.getElementById('gzPillars').innerHTML=pillarsData.map(p=>`<div class="gz-pillar"><div class="gz-pillar-label">${p.l}</div><div class="gz-pillar-val">${p.v}</div><div class="gz-pillar-elem">${p.e}</div></div>`).join('');
+
+  const ec=EC[currentElement];
+  document.getElementById('colorSection').innerHTML=ec.colors.map((c,i)=>`<div class="color-block" style="flex:${i===0?2:1}"><div class="color-fill" style="background:${c}"><div class="color-tag">${ec.tags[i]}</div><div class="color-name">${ec.names[i]}</div><div class="color-hex">${ec.hex[i]}</div></div></div>`).join('');
+
+  const pe=getPersonalElems(bd);
+  const total=Object.values(pe).reduce((a,b)=>a+b,0)||1;
+  const elemColMap={木:'#3D6B3A',火:'#B83A2A',土:'#B8884A',金:'#505060',水:'#1A406A'};
+  document.getElementById('elemBars').innerHTML='<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:3px;color:#888;margin-bottom:16px">NATAL ELEMENTS</div>'+Object.entries(pe).map(([e,v])=>{const pct=Math.round(v/total*100);return`<div class="elem-row"><div class="elem-char">${e}</div><div class="elem-track"><div class="elem-fill" style="width:${pct}%;background:${elemColMap[e]}"></div></div><div class="elem-pct">${pct}%</div></div>`;}).join('');
+
+  const zod=getZodiac(birthMonth,birthDay);
+  const zm=ZMAP[zod.zh]||{e:'土',h:'稳健大地，运势平稳积累'};
+  document.getElementById('zodiacPanel').innerHTML=`<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:3px;color:#888;margin-bottom:16px">ZODIAC</div><div class="zodiac-big">${zod.zh}座</div><div class="zodiac-en">${zod.en.toUpperCase()}</div><div class="zodiac-elem">守护五行 · ${zm.e}</div><div class="zodiac-hint">${zm.h}<br><br>今日天地${currentElement}，与星座${zm.e}${currentElement===zm.e?'相融合，能量双倍加持':'相遇，互补调和'}。</div>`;
+
+  const outs=OUTFITS[currentElement]||OUTFITS['土'];
+  document.getElementById('outfitTabs').innerHTML=outs.map((o,i)=>`<div class="outfit-tab${i===0?' active':''}" onclick="switchTab(${i})">${o.scene}</div>`).join('');
+  document.getElementById('outfitPanels').innerHTML=outs.map((o,i)=>`<div class="outfit-panel${i===0?' active':''}" id="panel${i}"><div class="outfit-item-col"><div class="outfit-scene">${o.scene} · STYLING</div>${o.items.slice(0,3).map(([n,c])=>`<div class="outfit-piece"><div class="piece-dot" style="background:${c}"></div><div class="piece-name">${n}</div></div>`).join('')}<div class="outfit-tip-txt">${o.tip}</div></div><div class="outfit-item-col"><div class="outfit-scene">COLOR PALETTE</div>${o.items.map(([n,c])=>`<div class="outfit-piece"><div class="piece-dot" style="background:${c}"></div><div class="piece-name">${n}</div></div>`).join('')}</div><div class="outfit-item-col" style="background:#fafafa"><div class="outfit-scene">ELEMENT NOTES</div><div style="font-family:Cormorant Garamond,serif;font-size:28px;font-weight:300;color:#111;letter-spacing:4px;margin-bottom:12px">${currentElement}</div><div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:2px;color:#888;line-height:2">TODAY'S<br>ELEMENT<br>ENERGY</div></div></div>`).join('');
+
+  const fArr=FORTUNES[currentElement];
+  document.getElementById('fortuneQuote').textContent=fArr[Math.floor(Math.random()*fArr.length)];
+  document.getElementById('fortuneElem').textContent=currentElement+'行之日';
+
+  document.getElementById('cardOutput').classList.remove('vis');
+  document.getElementById('aiTyping').classList.remove('vis');
+}
+
+function switchTab(idx){
+  document.querySelectorAll('.outfit-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('.outfit-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+}
+
+function generateCard(){
+  const btn=document.getElementById('genBtn');
+  btn.classList.add('loading');btn.textContent='生成中...';
+  document.getElementById('aiTyping').classList.add('vis');
+  document.getElementById('cardOutput').classList.remove('vis');
+
+  setTimeout(()=>{
+    btn.classList.remove('loading');btn.textContent='重新生成 ↗';
+    document.getElementById('aiTyping').classList.remove('vis');
+    renderCard();
+    document.getElementById('cardOutput').classList.add('vis');
+  },2200);
+}
+
+function renderCard(){
+  const ec=EC[currentElement];
+  const ct=COPY_TEMPLATES[currentElement];
+  const today=new Date();
+  const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+  document.getElementById('cardStrip').style.background=ec.colors[0];
+  document.getElementById('cardDateChip').innerHTML=`${today.getFullYear()}.${months[today.getMonth()]}.${today.getDate()}<br>${currentGZ}日 · ${currentElement}行`;
+
+  const zod=getZodiac(birthMonth,birthDay);
+  document.getElementById('cardColorsRow').innerHTML=ec.colors.slice(0,3).map((c,i)=>`<div class="card-color-chip"><div class="chip-dot" style="background:${c}"></div><div class="chip-label">${ec.names[i]}</div></div>`).join('');
+
+  const copy=(ct.emoji+' '+ct.hook+'\n\n'+ct.main.replace('{gz}',currentGZ)+'\n\n'+ct.tip).replace(/\\n/g,'\n');
+  lastGeneratedCopy=copy+'\n\n'+ct.tags.map(t=>'#'+t).join(' ');
+  document.getElementById('cardCopy').innerHTML=copy.split('\n').map(l=>`<span style="display:block">${l||'&nbsp;'}</span>`).join('');
+
+  document.getElementById('cardTags').innerHTML=ct.tags.map(t=>`<div class="card-tag">#${t}</div>`).join('');
+  document.getElementById('cardFooterDate').textContent=today.getFullYear()+'.'+months[today.getMonth()]+'.'+today.getDate();
+}
+
+async function sendToXHS(){
+  if(!lastGeneratedCopy){
+    alert('请先生成穿搭卡片');
+    return;
+  }
+  const prompt='请帮我优化这段小红书穿搭打卡文案，风格更活泼有趣、口语化，适合Z世代，保留所有标签：\n\n'+lastGeneratedCopy;
+  try{
+    if(navigator.clipboard&&window.isSecureContext){
+      await navigator.clipboard.writeText(prompt);
+    }else{
+      const ta=document.createElement('textarea');
+      ta.value=prompt;
+      ta.setAttribute('readonly','');
+      ta.style.position='fixed';
+      ta.style.opacity='0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    showToast('文案已复制，可以直接粘贴到小红书或 AI 助手');
+  }catch(err){
+    alert('复制失败，请稍后重试');
+  }
+}
+
+function showToast(message){
+  const toast=document.getElementById('toast');
+  toast.textContent=message;
+  toast.classList.add('vis');
+  window.clearTimeout(showToast.timer);
+  showToast.timer=window.setTimeout(()=>toast.classList.remove('vis'),2200);
+}
+
+const today=new Date();
+const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+document.getElementById('mastDate').innerHTML=months[today.getMonth()]+' '+today.getDate()+'<br>'+today.getFullYear();
+document.getElementById('birthDate').max=today.toISOString().split('T')[0];
+</script>
+<div class="toast" id="toast" aria-live="polite"></div>
+</main>
+</body>
+</html>

@@ -1,0 +1,4 @@
+.DS_Store
+.supabase
+dist
+node_modules
