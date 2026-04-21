@@ -336,6 +336,25 @@ const COPY_TEMPLATES={
 
 let currentElement='火';let currentGZ='';let birthMonth=1;let birthDay=1;let lastGeneratedCopy='';
 
+function getElementOrder(scores){
+  return Object.entries(scores).sort((a,b)=>b[1]-a[1]||'木火土金水'.indexOf(a[0])-'木火土金水'.indexOf(b[0]));
+}
+
+function getPersonalizedElement(bd,todayGZ,zodiacElem){
+  const scores=getPersonalElems(bd);
+  scores[todayGZ.dayElem]+=2;
+  scores[todayGZ.yearElem]+=1;
+  if(zodiacElem&&scores[zodiacElem]!==undefined) scores[zodiacElem]+=1;
+  const ordered=getElementOrder(scores);
+  return{
+    current:ordered[0][0],
+    dominant:ordered[0][0],
+    support:ordered[1][0],
+    balance:ordered[ordered.length-1][0],
+    scores
+  };
+}
+
 function getGZ(date){
   const base=new Date(1900,0,31);
   const total=Math.floor((date-base)/86400000);
@@ -386,7 +405,6 @@ function calculate(){
 function renderAll(bd){
   const today=new Date();
   const todayGZ=getGZ(today);
-  currentElement=todayGZ.dayElem;
   currentGZ=todayGZ.day;
 
   const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
@@ -394,20 +412,22 @@ function renderAll(bd){
   document.getElementById('gzDateVal').textContent=today.getFullYear()+'.'+(today.getMonth()+1)+'.'+today.getDate();
 
   const gz=getGZ(bd);
+  const pe=getPersonalElems(bd);
+  const zod=getZodiac(birthMonth,birthDay);
+  const zm=ZMAP[zod.zh]||{e:'土',h:'稳健大地，运势平稳积累'};
+  const profile=getPersonalizedElement(bd,todayGZ,zm.e);
+  currentElement=profile.current;
   const pillarsData=[{l:'YEAR PILLAR',v:todayGZ.year,e:todayGZ.yearElem},{l:'MONTH PILLAR',v:todayGZ.month,e:SE[HS.indexOf(todayGZ.month[0])]||'—'},{l:'DAY PILLAR',v:todayGZ.day,e:currentElement}];
   document.getElementById('gzPillars').innerHTML=pillarsData.map(p=>`<div class="gz-pillar"><div class="gz-pillar-label">${p.l}</div><div class="gz-pillar-val">${p.v}</div><div class="gz-pillar-elem">${p.e}</div></div>`).join('');
 
   const ec=EC[currentElement];
   document.getElementById('colorSection').innerHTML=ec.colors.map((c,i)=>`<div class="color-block" style="flex:${i===0?2:1}"><div class="color-fill" style="background:${c}"><div class="color-tag">${ec.tags[i]}</div><div class="color-name">${ec.names[i]}</div><div class="color-hex">${ec.hex[i]}</div></div></div>`).join('');
 
-  const pe=getPersonalElems(bd);
   const total=Object.values(pe).reduce((a,b)=>a+b,0)||1;
   const elemColMap={木:'#3D6B3A',火:'#B83A2A',土:'#B8884A',金:'#505060',水:'#1A406A'};
   document.getElementById('elemBars').innerHTML='<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:3px;color:#888;margin-bottom:16px">NATAL ELEMENTS</div>'+Object.entries(pe).map(([e,v])=>{const pct=Math.round(v/total*100);return`<div class="elem-row"><div class="elem-char">${e}</div><div class="elem-track"><div class="elem-fill" style="width:${pct}%;background:${elemColMap[e]}"></div></div><div class="elem-pct">${pct}%</div></div>`;}).join('');
 
-  const zod=getZodiac(birthMonth,birthDay);
-  const zm=ZMAP[zod.zh]||{e:'土',h:'稳健大地，运势平稳积累'};
-  document.getElementById('zodiacPanel').innerHTML=`<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:3px;color:#888;margin-bottom:16px">ZODIAC</div><div class="zodiac-big">${zod.zh}座</div><div class="zodiac-en">${zod.en.toUpperCase()}</div><div class="zodiac-elem">守护五行 · ${zm.e}</div><div class="zodiac-hint">${zm.h}<br><br>今日天地${currentElement}，与星座${zm.e}${currentElement===zm.e?'相融合，能量双倍加持':'相遇，互补调和'}。</div>`;
+  document.getElementById('zodiacPanel').innerHTML=`<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:3px;color:#888;margin-bottom:16px">ZODIAC</div><div class="zodiac-big">${zod.zh}座</div><div class="zodiac-en">${zod.en.toUpperCase()}</div><div class="zodiac-elem">守护五行 · ${zm.e}</div><div class="zodiac-hint">${zm.h}<br><br>今日天时为${todayGZ.dayElem}，你的本命优势偏${profile.dominant}，因此今日推荐以${currentElement}为主，辅以${profile.support}调和，避开${profile.balance}过弱失衡。</div>`;
 
   const outs=OUTFITS[currentElement]||OUTFITS['土'];
   document.getElementById('outfitTabs').innerHTML=outs.map((o,i)=>`<div class="outfit-tab${i===0?' active':''}" onclick="switchTab(${i})">${o.scene}</div>`).join('');
